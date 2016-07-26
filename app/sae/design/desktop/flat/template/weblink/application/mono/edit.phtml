@@ -1,6 +1,7 @@
 <?php $option_value = $this->getOptionValue(); ?>
 <?php $application = $this->getApplication(); ?>
 <?php $weblink = $option_value->getObject(); ?>
+
 <div class="form_content">
     <div id="list" class="edit_page weblink weblink_mono">
         <div class="mono">
@@ -19,6 +20,16 @@
                                 <div class="col-sm-8">
                                     <input type="text" id="weblink" name="link" class="input-flat url" value="<?php echo $weblink->getLink()->getUrl() ?>"/>
                                 </div>
+
+                                <!-- champ de recuperation de la valeur "withpanel" de la base de donnée -->
+                                <input type="hidden" name="withpanel" value="<?php echo $weblink->getLink()->getwithpanel();?>" id="testCheck">
+
+                                <!-- champ checkbox pour " Add a panel navigation " -->
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <input type="checkbox"  id="checked"/> <b>Add a panel navigation</b>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -38,6 +49,36 @@
 </div>
 <script type="text/javascript">
 
+
+    // ici on teste si checkbox prend comme valeur 1 ou 0 et ajouter cette derniere dans le input type hidden
+    $(function(){
+
+        $('#checked').change(function () {
+            if ($('#checked').is(':checked')) {
+
+                $('#testCheck').val(1);
+
+            }else{
+                $('#testCheck').val(0);
+            }
+
+        })
+
+    });
+
+
+    // au chargement du DOM en teste le input type hidden ( valeur reçu de la base de donnée )
+    $(function(){
+
+        if ($('#testCheck').val() == '1') {
+
+            $("#checked").prop("checked", true);
+
+        }
+
+    });
+
+
     page.setCallback('didappear', function() {
 
         $('#weblink').change(function() {
@@ -50,6 +91,10 @@
             reload(this, this.action, true, function(datas) {
                 if(datas.success) {
                     iframe.f.reloadTabbar();
+
+
+
+
                 }
             });
             return false;

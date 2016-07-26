@@ -444,11 +444,11 @@ var page = {
                         if(page.current && page.current.attr('rel') == datas.value_id) {
                             page.close(true);
                         }
-                        
+
                         $('#option_value_'+datas.value_id).remove();
                         if(!datas.use_admin_account) $('#option_value_customer_account').hide();
                         carousel.update();
-                        
+
 //                            iframe.f.page.destroySubpage(datas.value_id, true);
 
                         if(datas.was_folder) {
