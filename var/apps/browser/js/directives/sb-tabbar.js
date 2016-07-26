@@ -3,7 +3,7 @@
 App.directive('sbTabbar', function ($ionicHistory, $ionicModal, $ionicSlideBoxDelegate, $ionicSideMenuDelegate, $location, $rootScope, $timeout, $translate, $window, Analytics, Application, Customer, Dialog, HomepageLayout, Pages, Url, AUTH_EVENTS, PADLOCK_EVENTS, PUSH_EVENTS) {
     return {
         restrict: 'A',
-        templateUrl: function() {
+        templateUrl: function () {
             return "templates/home/" + HomepageLayout.properties.layoutId + "/view.html";
             // Url.get('/front/mobile_home/menu')
         },
@@ -20,7 +20,7 @@ App.directive('sbTabbar', function ($ionicHistory, $ionicModal, $ionicSlideBoxDe
 
             $scope.layout = HomepageLayout;
 
-            $scope.loadContent = function() {
+            $scope.loadContent = function () {
 
                 HomepageLayout.getOptions().then(function (options) {
                     $scope.options = options;
@@ -59,17 +59,17 @@ App.directive('sbTabbar', function ($ionicHistory, $ionicModal, $ionicSlideBoxDe
                     }
 
                     $timeout(function () {
-                        if(!Pages.is_loaded) {
+                        if (!Pages.is_loaded) {
                             Pages.is_loaded = true;
                             $scope.tabbar_is_visible = true;
                         }
                     }, 500);
 
                     /** Load first feature is needed */
-                    if($rootScope.loginFeature === true) {
-                    	$ionicHistory.goBack();
-                    	$rootScope.loginFeature = null;
-                    	
+                    if ($rootScope.loginFeature === true) {
+                        $ionicHistory.goBack();
+                        $rootScope.loginFeature = null;
+
                     } else if (!Application.is_customizing_colors && HomepageLayout.properties.options.autoSelectFirst && features.first_option !== false) {
                         $ionicHistory.nextViewOptions({
                             historyRoot: true,
@@ -87,51 +87,53 @@ App.directive('sbTabbar', function ($ionicHistory, $ionicModal, $ionicSlideBoxDe
                 $scope.pages_list_is_visible = false;
             };
 
-            $scope.goTo = function(feature) {
+            $scope.goTo = function (feature) {
 
-                if($scope.moreModal) {
+                if ($scope.moreModal) {
                     $scope.closeMore();
                 }
 
                 /** Clear history for side-menu feature */
-                switch($scope.data.layout.position) {
-                    case 'left': case 'right':
-                    if($ionicSideMenuDelegate.isOpenLeft()){
-                        $ionicSideMenuDelegate.toggleLeft();
-                    }
-                    if($ionicSideMenuDelegate.isOpenRight()){
-                        $ionicSideMenuDelegate.toggleRight();
-                    }
+                switch ($scope.data.layout.position) {
+                    case 'left':
+                    case 'right':
+                        if ($ionicSideMenuDelegate.isOpenLeft()) {
+                            $ionicSideMenuDelegate.toggleLeft();
+                        }
+                        if ($ionicSideMenuDelegate.isOpenRight()) {
+                            $ionicSideMenuDelegate.toggleRight();
+                        }
 
-                    if(feature.code != "padlock") { /** do not clear history if we open the padlock */
-	                    $ionicHistory.nextViewOptions({
-	                        historyRoot: true,
-	                        disableAnimate: false
-	                    });
-                    }
-                    break;
+                        if (feature.code != "padlock") {
+                            /** do not clear history if we open the padlock */
+                            $ionicHistory.nextViewOptions({
+                                historyRoot: true,
+                                disableAnimate: false
+                            });
+                        }
+                        break;
                     default:
                 }
 
-                if(attrs.isDisabled) return false;
+                if (attrs.isDisabled) return false;
 
-                if(feature.code == "tabbar_account") {
-                    var account_feature = { id: 0 };
+                if (feature.code == "tabbar_account") {
+                    var account_feature = {id: 0};
                     Analytics.storePageOpening(account_feature);
                     $scope.login();
-                } else if(feature.code == "tabbar_more") {
+                } else if (feature.code == "tabbar_more") {
                     $scope.tabbar_is_visible = false;
                     $scope.pages_list_is_visible = true;
                     $scope.more();
-                } else if(feature.is_link) {
-                    if($rootScope.isOverview) {
+                } else if (feature.is_link) {
+                    if ($rootScope.isOverview) {
                         Dialog.alert($translate.instant("Error"), $translate.instant("This feature is available from the application only"), $translate.instant("OK"));
                         return;
                     }
 
-                    if(ionic.Platform.isAndroid() && feature.url.indexOf("pdf") >= 0) {
+                    if (ionic.Platform.isAndroid() && feature.url.indexOf("pdf") >= 0) {
                         $window.open(feature.url, "_system", "location=no");
-                    } else {
+                    } else {
                         $window.open(feature.url, $rootScope.getTargetForLink(), "location=no");
                     }
 
@@ -143,86 +145,91 @@ App.directive('sbTabbar', function ($ionicHistory, $ionicModal, $ionicSlideBoxDe
 
             };
 
-            $scope.gotoPage = function(index) {
+            $scope.gotoPage = function (index) {
                 $ionicSlideBoxDelegate.$getByHandle('slideBoxLayout').slide(index);
             };
 
-            $scope.closePreviewer = function() {
+            $scope.closePreviewer = function () {
                 $window.location = "app:closeApplication";
             };
 
-            $scope.login = function($scope) { $rootScope.loginFeature = null; Customer.loginModal($scope) };
+            $scope.login = function ($scope) {
+                $rootScope.loginFeature = null;
+                Customer.loginModal($scope)
+            };
 
             $scope.loadContent();
 
-            if($rootScope.isOverview) {
-                $scope.$on("tabbarStatesChanged", function() {
-                    if(!HomepageLayout.isInitialized()) {
+            if ($rootScope.isOverview) {
+                $scope.$on("tabbarStatesChanged", function () {
+                    if (!HomepageLayout.isInitialized()) {
                         $scope.loadContent();
                     }
                 });
             }
 
-            $rootScope.$on(PUSH_EVENTS.unreadPushs, function(event, args) {
-                $timeout(function() {
+            $rootScope.$on(PUSH_EVENTS.unreadPushs, function (event, args) {
+                $timeout(function () {
                     $scope.push_badge = args;
                 });
             });
-            $rootScope.$on(PUSH_EVENTS.readPushs, function() { $scope.push_badge = 0; });
+            $rootScope.$on(PUSH_EVENTS.readPushs, function () {
+                $scope.push_badge = 0;
+            });
 
             /** Layout 1, Layout 2, Layout 10 more modal, and maybe more */
             $scope.modalUrl = (HomepageLayout.properties.layoutId != 'l10') ? $scope.modalDefault : $scope.modalLayout10;
 
-            $scope.more = function() {
+            $scope.more = function () {
                 $ionicModal.fromTemplateUrl($scope.modalUrl, {
                     scope: $scope,
                     animation: 'slide-in-up'
-                }).then(function(modal) {
+                }).then(function (modal) {
                     $scope.moreModal = modal;
                     $scope.moreModal.show();
                 });
             };
 
-            $scope.closeMore = function() {
+            $scope.closeMore = function () {
                 $scope.moreModal.hide();
                 $scope.tabbar_is_visible = true;
                 $scope.pages_list_is_visible = false;
             };
 
-            $rootScope.$on(AUTH_EVENTS.logoutSuccess, function() {
-                $timeout(function() {
+            $rootScope.$on(AUTH_EVENTS.logoutSuccess, function () {
+                $timeout(function () {
                     HomepageLayout.setNeedToBuildTheOptions(true);
                     $scope.loadContent();
                 });
             });
 
-            $rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
-                $timeout(function() {
+            $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+                $timeout(function () {
                     HomepageLayout.setNeedToBuildTheOptions(true);
                     $scope.loadContent();
                 });
             });
 
-            $rootScope.$on(PADLOCK_EVENTS.unlockFeatures, function() {
-                $timeout(function() {
+            $rootScope.$on(PADLOCK_EVENTS.unlockFeatures, function () {
+                $timeout(function () {
                     HomepageLayout.setNeedToBuildTheOptions(true);
                     $scope.loadContent();
                 });
             });
 
-            if($rootScope.isOverview) {
+            if ($rootScope.isOverview) {
                 $scope.tabbar_is_transparent = $rootScope.tabbar_is_transparent != null ? $rootScope.tabbar_is_transparent : $scope.tabbar_is_transparent;
-                $window.changeIcon = function(id, url) {
-                    angular.forEach($scope.features.options, function(option) {
-                        if(option.id == id) {
-                            $timeout(function() {
+                $window.changeIcon = function (id, url) {
+                    angular.forEach($scope.features.options, function (option) {
+                        if (option.id == id) {
+                            $timeout(function () {
                                 option.icon_url = url;
                             });
                         }
                     });
                 };
-                $window.toggleTabbarIsTransparent = function(value) {
-                    $timeout(function() {
+                $window.toggleTabbarIsTransparent = function (value) {
+                    $timeout(function () {
                         $rootScope.tabbar_is_transparent = value;
                         $scope.tabbar_is_transparent = value;
                     });
@@ -240,13 +247,26 @@ App.directive('tabbarItems', function ($timeout, $window) {
             option: '=',
             goToUrl: '&'
         },
-        link: function(scope, element) {
+        link: function (scope, element) {
 
             element.on("click", function () {
-                sbLog("Clicked Option: ", scope.option);
-                $timeout(function () {
-                    scope.goToUrl(scope.option);
-                });
+
+                if(scope.option.is_panel == 1){
+                    var txt;
+                    var r = confirm("Open in webView ?");
+                    if (r == true) {
+                        $timeout(function () {
+                            scope.goToUrl(scope.option);
+                        });
+                    }
+                }else{
+                    $timeout(function () {
+                        scope.goToUrl(scope.option);
+                    });
+                }
+                // console.log(scope.option.path);
+                //sbLog("Clicked Option: ", scope.option);
+                /**/
             });
 
         }

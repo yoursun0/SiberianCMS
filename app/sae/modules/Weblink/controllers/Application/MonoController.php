@@ -32,6 +32,9 @@ class Weblink_Application_MonoController extends Application_Controller_Default
                 // Affecte l'url au lien
                 $weblink->getLink()->setUrl(!empty($datas['link']) ? $datas['link'] : null);
 
+                // Affecte le withPanel
+                $weblink->getLink()->setwithpanel($datas['withpanel']);
+
                 // Sauvegarde
                 $weblink->save();
 

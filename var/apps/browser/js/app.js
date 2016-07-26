@@ -68,7 +68,7 @@ var App = angular.module('starter', ['ionic', 'ion-gallery', 'ngCordova', 'ngIOS
                     Analytics.data.storeClosingId = result.id;
                 });
             });
-            
+
             $ionicPlatform.on('pause', function(result) {
                 sbLog("## App is on pause ##");
                 Analytics.storeClosing();

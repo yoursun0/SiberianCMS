@@ -29,7 +29,7 @@ class Front_Mobile_HomeController extends Application_Controller_Mobile_Default 
     public function sliderAction() {
         $this->loadPartials('home_mobile_slider_view_l'.$this->getApplication()->getLayoutId(), false);
     }
-    
+
     public function listAction() {
         $html = $this->getLayout()->addPartial("homepage_scrollbar", "core_view_mobile_default", "home/l1/list.phtml")->toHtml();
         $this->getLayout()->setHtml($html);
@@ -51,11 +51,13 @@ class Front_Mobile_HomeController extends Application_Controller_Mobile_Default 
     public function findallAction() {
 
         $option_values = $this->getApplication()->getPages(10);
+
         $data = array('pages' => array());
         $color = $this->getApplication()->getBlock('tabbar')->getImageColor();
         $background_color = $this->getApplication()->getBlock('tabbar')->getBackgroundColor();
 
         foreach($option_values as $option_value) {
+
             $data['pages'][] = array(
                 'value_id'          => $option_value->getId(),
                 'id'                => intval($option_value->getId()),
@@ -69,8 +71,13 @@ class Front_Mobile_HomeController extends Application_Controller_Mobile_Default 
                 'icon_is_colorable' => $option_value->getImage()->getCanBeColorized(),
                 'is_locked'         => $option_value->isLocked(),
                 'is_link'           => !$option_value->getIsAjax(),
-                'position'          => $option_value->getPosition()
+                'position'          => $option_value->getPosition(),
+                'is_panel'          => $option_value->getWithPanel(null, array('value_id' => $option_value->getId()), false),
+
+
             );
+
+
         }
 
         $option = new Application_Model_Option();
@@ -102,7 +109,7 @@ class Front_Mobile_HomeController extends Application_Controller_Mobile_Default 
             'icon_is_colorable'     => 1,
             'is_visible'            => $this->getApplication()->usesUserAccount()
         );
-        
+
         $layout = new Application_Model_Layout_Homepage();
         $layout->find($this->getApplication()->getLayoutId());
 

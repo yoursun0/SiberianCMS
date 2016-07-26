@@ -183,7 +183,7 @@ class Application_Model_Option extends Core_Model_Default
         $library = $this->getLibrary();
 
         $icon = $library->getFirstIcon();
-        
+
         return $icon->getId();
     }
 
@@ -284,6 +284,47 @@ class Application_Model_Option extends Core_Model_Default
         $request->useApplicationKey($use_key);
 
         return $path;
+    }
+
+    public function getWithPanel($action, $params = array(), $env = null) {
+
+        if($this->getValueId()) {
+            $params["value_id"] = $this->getValueId();
+        }
+
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        $use_key = $request->useApplicationKey();
+        $path = null;
+        $force_uri = stripos($action, "/") !== false;
+
+        $uri = $force_uri ? $action : $this->getUri();
+
+        if($uri) {
+
+            if(!is_null($env)) {
+
+                if(!$force_uri) $uri .= $action;
+
+                if($this->getData("{$env}_uri")) {
+                    $uri = $this->getData("{$env}_uri");
+                }
+
+                if($env == "mobile") {
+                    $request->useApplicationKey(true);
+                }
+            }
+
+            if($env != "desktop" AND !$this->getIsAjax() AND $this->getObject()->getLink()) $withpanel = $this->getObject()->getLink()->getwithpanel();
+            else $path = parent::getPath($uri, $params);
+
+        }
+        else {
+            $path = '/front/index/noroute';
+        }
+
+        $request->useApplicationKey($use_key);
+
+        return $withpanel;
     }
 
     public function getMobileViewUri($action, $params = array()) {

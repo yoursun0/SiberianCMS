@@ -5,8 +5,7 @@ class Admin_AccountController extends Admin_Controller_Default
 
     public function editAction() {
         $this->loadPartials();
-        $current_admin = $this->getSession()->getAdmin();
-        $this->getLayout()->getPartial("content")->setMode("edit")->setEditAdmin($current_admin);
+        $this->getLayout()->getPartial("content")->setMode("edit");
     }
 
     public function savepostAction() {

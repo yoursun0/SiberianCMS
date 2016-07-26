@@ -14,18 +14,18 @@
             <?php endforeach; ?>
             <?php $option = new Application_Model_Option_Value(); ?>
             <?php $option->find('customer_account'); ?>
-            <?php 
+            <?php
                 echo $this->getLayout()->addPartial('row_'.$option->getId(), 'application_view_customization_features_list_options', 'application/customization/features/list/options/li.phtml')
                     ->setOptionValue($option)
                     ->setIsSortable(0)
                     ->setIsHidden(!$this->getApplication()->usesUserAccount())
                     ->toHtml()
-                ; 
+                ;
             ?>
             <?php if($application->getLayout()->getUseMoreButton()) : ?>
                 <?php $option = new Application_Model_Option_Value(); ?>
                 <?php $option->find('more_items'); ?>
-                <?php 
+                <?php
                     echo $this->getLayout()->addPartial('row_'.$option->getId(), 'application_view_customization_features_list_options', 'application/customization/features/list/options/li.phtml')
                         ->setOptionValue($option)
                         ->setIsSortable(0)
