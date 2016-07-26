@@ -51,4 +51,8 @@ $schemas['weblink_link'] = array(
         'type' => 'tinyint(1) unsigned',
         'default' => '0',
     ),
+    'withpanel' => array(
+        'type' => 'tinyint(1) unsigned',
+        'default' => '0',
+    ),
 );
