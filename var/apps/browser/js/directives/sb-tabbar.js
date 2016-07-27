@@ -250,20 +250,15 @@ App.directive('tabbarItems', function ($timeout, $window) {
         link: function (scope, element) {
 
             element.on("click", function () {
-
-                if(scope.option.is_panel == 1){
-                    var txt;
-                    var r = confirm("Open in webView ?");
-                    if (r == true) {
-                        $timeout(function () {
-                            scope.goToUrl(scope.option);
-                        });
-                    }
+                console.log(scope.option.url);
+                if(scope.option.code == "weblink_mono"){
+                    window.open(scope.option.url,"_self");
                 }else{
                     $timeout(function () {
                         scope.goToUrl(scope.option);
                     });
                 }
+
                 // console.log(scope.option.path);
                 //sbLog("Clicked Option: ", scope.option);
                 /**/
