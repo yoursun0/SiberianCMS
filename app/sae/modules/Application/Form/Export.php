@@ -51,10 +51,7 @@ class Application_Form_Export extends Siberian_Form_Abstract {
             }
         }
 
-        if(!empty($elements)) {
-            $this->addDisplayGroup($elements, __("Features to export & Options"));
-        }
-
+        $this->addDisplayGroup($elements, __("Features to export & Options"));
     }
 
     public function addTemplate() {

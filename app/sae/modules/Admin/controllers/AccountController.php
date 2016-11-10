@@ -137,7 +137,7 @@ class Admin_AccountController extends Admin_Controller_Default
 
     public function loginpostAction() {
 
-        if(!$this->getSession()->isLoggedIn() && ($datas = $this->getRequest()->getPost())) {
+        if($datas = $this->getRequest()->getPost()) {
 
             $this->getSession()->resetInstance();
             $canBeLoggedIn = false;
